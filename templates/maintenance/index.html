@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block title %}
+Maintenance | FixTrack
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <div class="eyebrow">
+            SERVICE OPERATIONS
+        </div>
+
+        <h1>Maintenance</h1>
+
+        <p>
+            Review maintenance activity and service history.
+        </p>
+
+    </div>
+
+
+    <a
+        href="{{ url_for('maintenance.add_maintenance') }}"
+        class="btn btn-primary"
+    >
+        + Log Maintenance
+    </a>
+
+</div>
+
+
+<div class="page-toolbar">
+
+    <div class="toolbar-info">
+        <span class="toolbar-dot"></span>
+        Maintenance History
+    </div>
+
+    <div class="toolbar-count">
+        {{ records|length }} record{% if records|length != 1 %}s{% endif %}
+    </div>
+
+</div>
+
+
+<div class="table-container maintenance-table">
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>Machine</th>
+                <th>Spare Part</th>
+                <th>Quantity</th>
+                <th>Date</th>
+                <th>Remarks</th>
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            {% if records %}
+
+                {% for record in records %}
+
+                <tr>
+
+                    <td>
+
+                        <div class="table-primary-text">
+                            {{ record["machine_number"] }}
+                        </div>
+
+                        <div class="table-secondary-text">
+                            {{ record["machine_name"] }}
+                        </div>
+
+                    </td>
+
+
+                    <td>
+
+                        {% if record["part_name"] %}
+
+                            <div class="table-primary-text">
+                                {{ record["part_name"] }}
+                            </div>
+
+                            <div class="table-secondary-text">
+
+                                {{ record["part_code"] }}
+
+                                {% if record["brand"] %}
+                                    · {{ record["brand"] }}
+                                {% endif %}
+
+                            </div>
+
+                        {% else %}
+
+                            <span class="muted-text">
+                                No spare part
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        <span class="quantity-badge">
+                            {{ record["quantity"] }}
+                        </span>
+
+                    </td>
+
+
+                    <td>
+                        {{ record["maintenance_date"] }}
+                    </td>
+
+
+                    <td>
+
+                        {% if record["remarks"] %}
+
+                            {{ record["remarks"] }}
+
+                        {% else %}
+
+                            <span class="muted-text">
+                                No remarks
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            {% else %}
+
+                <tr>
+
+                    <td colspan="5" class="empty-table">
+
+                        <div class="empty-state">
+
+                            <div class="empty-state-icon">
+                                ⌁
+                            </div>
+
+                            <strong>No maintenance records</strong>
+
+                            <span>
+                                Log your first maintenance activity to see it here.
+                            </span>
+
+                            <a
+                                href="{{ url_for('maintenance.add_maintenance') }}"
+                                class="btn btn-primary"
+                            >
+                                + Log Maintenance
+                            </a>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+            {% endif %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

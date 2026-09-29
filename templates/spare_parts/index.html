@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}
+Inventory | FixTrack
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+        <h1>Inventory</h1>
+
+        <p>
+            Track spare parts and stock levels.
+        </p>
+    </div>
+
+    <a
+        href="{{ url_for('spare_parts.add_spare_part') }}"
+        class="btn btn-primary"
+    >
+        + Add Spare Part
+    </a>
+
+</div>
+
+
+<div class="dashboard-section">
+
+    <div class="section-header">
+
+        <div>
+            <h2>Spare Parts</h2>
+
+            <p>
+                Current inventory across the factory.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Part</th>
+                    <th>Category</th>
+                    <th>Brand</th>
+                    <th>Stock</th>
+                    <th>Location</th>
+                    <th>Actions</th>
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% if spare_parts %}
+
+                    {% for part in spare_parts %}
+
+                    <tr>
+
+                        <td>
+
+                            <div class="table-primary-text">
+                                {{ part["part_code"] }}
+                            </div>
+
+                            <div class="table-secondary-text">
+                                {{ part["part_name"] }}
+                            </div>
+
+                        </td>
+
+
+                        <td>
+                            {{ part["category"] or "—" }}
+                        </td>
+
+
+                        <td>
+                            {{ part["brand"] or "—" }}
+                        </td>
+
+
+                        <td>
+
+                            {% if part["current_stock"] <= part["reorder_level"] %}
+
+                                <span class="status-badge status-warning">
+                                    {{ part["current_stock"] }} Low
+                                </span>
+
+                            {% else %}
+
+                                <span class="status-badge status-active">
+                                    {{ part["current_stock"] }} In Stock
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+                            {{ part["location"] or "—" }}
+                        </td>
+
+
+                        <td>
+
+                            <a
+                                href="{{ url_for('spare_parts.edit_spare_part', part_id=part['id']) }}"
+                                class="action-link"
+                            >
+                                Edit
+                            </a>
+
+                            <a
+                                href="{{ url_for('spare_parts.delete_spare_part', part_id=part['id']) }}"
+                                class="action-link danger"
+                            >
+                                Delete
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <tr>
+
+                        <td
+                            colspan="6"
+                            class="empty-table"
+                        >
+                            No spare parts registered yet.
+                        </td>
+
+                    </tr>
+
+                {% endif %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,398 @@
+{% extends "base.html" %}
+
+{% block title %}
+Dashboard | FixTrack
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <div class="eyebrow">
+            FACTORY OPERATIONS
+        </div>
+
+        <h1>Good evening, Admin.</h1>
+
+        <p>
+            Here's the latest overview of your factory operations.
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="dashboard-cards">
+
+    <div class="stat-card">
+
+        <div class="stat-card-top">
+
+            <div>
+
+                <p>Total Machines</p>
+
+                <span class="stat-description">
+                    Registered equipment
+                </span>
+
+            </div>
+
+            <span class="stat-icon">
+                ⚙
+            </span>
+
+        </div>
+
+        <h2>{{ total_machines }}</h2>
+
+        <div class="stat-line"></div>
+
+        <span class="stat-footer">
+            Equipment tracked by FixTrack
+        </span>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-card-top">
+
+            <div>
+
+                <p>Spare Parts</p>
+
+                <span class="stat-description">
+                    Inventory items
+                </span>
+
+            </div>
+
+            <span class="stat-icon">
+                ▣
+            </span>
+
+        </div>
+
+        <h2>{{ total_spare_parts }}</h2>
+
+        <div class="stat-line"></div>
+
+        <span class="stat-footer">
+            Parts currently in inventory
+        </span>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-card-top">
+
+            <div>
+
+                <p>Low Stock</p>
+
+                <span class="stat-description">
+                    Items requiring attention
+                </span>
+
+            </div>
+
+            <span class="stat-icon warning-icon">
+                !
+            </span>
+
+        </div>
+
+        <h2>{{ low_stock_items }}</h2>
+
+        <div class="stat-line warning-line"></div>
+
+        <span class="stat-footer">
+            Review inventory levels
+        </span>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-card-top">
+
+            <div>
+
+                <p>Maintenance</p>
+
+                <span class="stat-description">
+                    Total service records
+                </span>
+
+            </div>
+
+            <span class="stat-icon">
+                ⌁
+            </span>
+
+        </div>
+
+        <h2>{{ total_maintenance }}</h2>
+
+        <div class="stat-line"></div>
+
+        <span class="stat-footer">
+            Maintenance activity recorded
+        </span>
+
+    </div>
+
+</div>
+
+
+<div class="dashboard-grid">
+
+
+    <div class="dashboard-section">
+
+        <div class="section-header">
+
+            <div>
+
+                <div class="section-kicker">
+                    ACTIVITY
+                </div>
+
+                <h2>
+                    Recent Maintenance
+                </h2>
+
+                <p>
+                    Latest activity recorded in the system.
+                </p>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('maintenance.maintenance') }}"
+                class="section-link"
+            >
+                View all →
+            </a>
+
+        </div>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Machine</th>
+                        <th>Spare Part</th>
+                        <th>Qty</th>
+                        <th>Date</th>
+                        <th>Remarks</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% if recent_records %}
+
+                        {% for record in recent_records %}
+
+                        <tr>
+
+                            <td>
+
+                                <div class="table-primary-text">
+                                    {{ record["machine_number"] }}
+                                </div>
+
+                                <div class="table-secondary-text">
+                                    {{ record["machine_name"] }}
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                {% if record["part_name"] %}
+
+                                    <div class="table-primary-text">
+                                        {{ record["part_name"] }}
+                                    </div>
+
+                                    <div class="table-secondary-text">
+
+                                        {% if record["brand"] %}
+                                            {{ record["brand"] }}
+                                        {% endif %}
+
+                                        {% if record["specification"] %}
+                                            · {{ record["specification"] }}
+                                        {% endif %}
+
+                                    </div>
+
+                                {% else %}
+
+                                    <span class="muted-text">
+                                        No spare part
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="quantity-badge">
+                                    {{ record["quantity"] }}
+                                </span>
+
+                            </td>
+
+
+                            <td>
+                                {{ record["maintenance_date"] }}
+                            </td>
+
+
+                            <td>
+
+                                {% if record["remarks"] %}
+
+                                    {{ record["remarks"] }}
+
+                                {% else %}
+
+                                    <span class="muted-text">
+                                        No remarks
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <tr>
+
+                            <td
+                                colspan="5"
+                                class="empty-table"
+                            >
+                                No maintenance records yet.
+                            </td>
+
+                        </tr>
+
+                    {% endif %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <div class="dashboard-side-card">
+
+    <div class="side-card-icon">
+        ✦
+    </div>
+
+    <div class="side-card-kicker">
+        FIXTRACK
+    </div>
+
+    <h3>
+        Factory operations,
+        <span>simplified.</span>
+    </h3>
+
+    <p>
+        Monitor equipment, manage inventory and keep
+        maintenance activity organized from one workspace.
+    </p>
+
+
+    <div class="side-card-status">
+
+        <span class="status-dot"></span>
+
+        <div>
+
+            <strong>
+                System Online
+            </strong>
+
+            <small>
+                All services operational
+            </small>
+
+        </div>
+
+    </div>
+
+
+    <div class="side-card-divider"></div>
+
+
+    <div class="side-card-metric">
+
+        <div>
+
+            <span class="metric-label">
+                INVENTORY STATUS
+            </span>
+
+            <strong>
+                {{ low_stock_items }}
+                <span>low-stock item{% if low_stock_items != 1 %}s{% endif %}</span>
+            </strong>
+
+        </div>
+
+        <div class="metric-arrow">
+            →
+        </div>
+
+    </div>
+
+</div>
+
+<div class="dashboard-footer">
+
+    <span>
+        FIXTRACK Factory Operations
+    </span>
+
+    <span>
+        System status: <strong>Operational</strong>
+    </span>
+
+    <span>
+        v2.0
+    </span>
+
+</div>
+{% endblock %}
